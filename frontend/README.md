@@ -1,14 +1,8 @@
 # Getting Started with Imaginary Cinema
 
 ## Start Application
-## With Docker
 
-Make sure that you have docker running:
-
-### `docker-compose up --build`
-
-## Without Docker
-Run the following command in /frontend directory
+In the ./folder directory, you can run:
 
 ### `npm start`
 

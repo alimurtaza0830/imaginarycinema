@@ -1,0 +1,12 @@
+version: '3'
+services:
+  ui:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    volumes:
+      - ./frontend:/usr/app
+
+      
