@@ -7,9 +7,10 @@ Make sure that you have docker running:
 
 ### `docker-compose up --build`
 
-## Without Docker
-Run the following command in /frontend directory
+## Without Docker (start from /frontend directory)
+Run `npm install` from /frontend directory to install dependencies
 
+Run the following command to run the application
 ### `npm start`
 
 Runs the app in the development mode.\
