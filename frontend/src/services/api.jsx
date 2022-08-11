@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const url = "https://swapi.dev/api/films";
+// const url = "https://swapi.dev/api/films";
+const url = "http://localhost:3001/api/"
 
 export async function getMovies() {
-  return await axios.get(url).catch(function (error) {
+  return await axios.get(url + 'movies').catch(function (error) {
     console.log("Something went wrong while fetching movies", error);
   });
 }
