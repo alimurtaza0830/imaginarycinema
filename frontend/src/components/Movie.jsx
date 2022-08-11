@@ -17,7 +17,7 @@ const Movie = ({ film }) => {
           className="btn btn-sm btn-light"
           onClick={() => history(`${film.episode_id}`, { state: film })}
         >
-          see detail
+          know more...
         </button>
         </div>
       </div>
