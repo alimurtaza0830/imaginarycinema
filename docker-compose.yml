@@ -1,12 +1,33 @@
-version: '3'
+version: "3.8"
 services:
   ui:
     build:
       context: ./frontend
+    container_name: frontend
     ports:
       - "3000:3000"
     stdin_open: true
     volumes:
-      - ./frontend:/usr/app
+      - ./frontend:/usr/app/src
 
-      
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/usr/app
+    depends_on:
+      - database
+
+  database:
+    image: "mongo"
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - data:/data/db
+
+volumes:
+  data:
