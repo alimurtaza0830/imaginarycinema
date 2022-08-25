@@ -1,79 +1,76 @@
-import React from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Formik, Form } from "formik";
+import { object, ref, string } from "yup";
 import { register } from "../services/api";
-
+import Input from "./Input";
 
 const RegisterForm = () => {
-  const registerationForm = Yup.object().shape({
-    name: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
-      .required("required"),
-    email: Yup.string().email("Invalid email").required("required"),
-    password: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
-      .required("required"),
+  const [error, setError] = useState("");
+
+  let navigate = useNavigate();
+  const registerValidation = object().shape({
+    name: string().required(),
+    email: string()
+      .required("Required")
+      .email("Valid email required"),
+    password: string()
+      .min(6, "Required")
+      .required("Required"),
+    confirmPassword: string()
+      .required("Please confirm your password")
+      .oneOf([ref("password")], "Passwords do not match"),
   });
 
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
-    validationSchema: registerationForm,
-    onSubmit: async (values) => {
-      const checking = await register(values);
+  const handleSubmit = async (values) => {
+    const { status, data } = await register(values);
+    if (status >= 400) return setError(data);
 
-    },
-  });
+    localStorage.setItem("token", data);
+    setTimeout(() => {
+      navigate("../movies", { replace: true });
+    }, 1500);
+  };
 
   return (
     <div className="container">
-      <form onSubmit={formik.handleSubmit}>
-        <div className="form-group">
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              id="name"
-              name="name"
-              onChange={formik.handleChange}
-              value={formik.values.name}
-              className="form-control"
-            />
-            <label for="floatingInput">Name</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              id="email"
-              name="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
-              className="form-control"
-            />
-            <label for="floatingInput">Email</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              onChange={formik.handleChange}
-              value={formik.values.password}
-              className="form-control"
-            />
-            <label for="floatingPassword">Password</label>
-          </div>
-          <div className="form-floating">
-            <button className="btn btn-primary" type="submit">
-              Register
-            </button>
-          </div>
-        </div>
-      </form>
+      <Formik
+        initialValues={{
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        }}
+        onSubmit={handleSubmit}
+        validationSchema={registerValidation}
+      >
+        {() => {
+          return (
+            <Form>
+              <div className="form-group">
+                {error && (
+                  <div className="alert alert-dismissible alert-danger">
+                    {error}
+                  </div>
+                )}
+                <Input name="name" label="Name" type="text" />
+                <Input name="email" label="Email" type="email" />
+                <Input name="password" label="Password" type="password" />
+                <Input
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                />
+                <div className="form-floating">
+                  <button className="btn btn-primary" type="submit">
+                    register
+                  </button>
+                </div>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
     </div>
   );
 };
