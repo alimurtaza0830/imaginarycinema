@@ -24,8 +24,8 @@ export function register(user) {
       password: user.password,
       name: user.name,
     })
-    .catch(function(error) {
-      console.log("something went wrong while registering user", error);
+    .catch((error) => {
+      return error.response;
     });
 }
 
